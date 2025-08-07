@@ -1,158 +1,189 @@
-# 🎯 Eye Blink Detection System
+# Eye Blink Detection System
 
-**A real-time computer vision application that detects eye blinks and simulates Enter key presses — designed for accessibility, automation, and hands-free interaction.**
+A real-time eye blink detection system using Python, OpenCV, and computer vision techniques. The system detects blinks through your webcam and can simulate keyboard actions (like pressing "Enter") when blinks are detected.
 
----
+## Features
 
-## 📌 Overview
+- **Real-time blink detection** using webcam input
+- **Automatic keyboard simulation** (Enter key press on blink detection)
+- **Multiple interfaces**: Command-line and GUI versions
+- **Modular architecture** for easy customization
+- **Adjustable sensitivity** and detection parameters
+- **Visual feedback** with blink count and eye detection status
+- **Safety features** including PyAutoGUI failsafe
 
-This project uses a webcam feed to detect human blinks using facial landmarks and Eye Aspect Ratio (EAR). When a blink is detected, it can simulate pressing the **Enter key**. This allows hands-free control of applications like Notepad, PowerPoint, and more.
+## Project Structure
 
-Built with:
-- **Python**
-- **OpenCV**
-- **dlib**
-- **PyAutoGUI**
-- **Tkinter (for GUI version)**
+```
+Eye blink detection/
+├── main.py                    # Main command-line application
+├── gui_app.py                 # GUI application using Tkinter
+├── eye_tracker.py             # Eye tracking and blink detection logic
+├── utils.py                   # Utility functions and helper classes
+├── blink_detection_opencv.py  # Standalone OpenCV-based detection
+├── detect_blinks_mine.py      # Original dlib-based script (with issues)
+├── requirements.txt           # Python dependencies
+├── shape_predictor_68_face_landmarks.dat  # Facial landmark model
+└── README.md                  # This file
+```
 
----
+## Installation
 
-## 🧠 How It Works
-
-1. **Face Detection** – OpenCV Haar Cascade or Dlib HOG
-2. **Eye Landmark Detection** – Dlib's 68-point shape predictor
-3. **EAR Calculation** – Computes vertical/horizontal eye distances
-4. **Blink Detection** – If EAR falls below threshold for a number of frames
-5. **Action** – Simulates pressing Enter key using PyAutoGUI
-
-### 👁️ EAR Formula:
-
-<img width="632" height="142" alt="blink_detection_equation" src="https://github.com/user-attachments/assets/2fd760cc-2942-4929-8cc4-d8b74b607e76" />
-
----
-
-## 🗂️ File Structure
-
-<img width="614" height="386" alt="image" src="https://github.com/user-attachments/assets/5f43f2d2-5edf-4bfa-afef-8b15c150754d" />
-
-
-## ⚙️ Features
-
-### ✅ Detection
-- Real-time video from webcam
-- Face and eye detection using facial landmarks
-- Eye Aspect Ratio (EAR) calculation
-- Accurate blink detection using threshold and frame count
-
-### 🎮 Controls
-| Key | Action |
-|-----|--------|
-| `q` | Quit application |
-| `s` | Toggle Enter key simulation |
-| `r` | Reset blink counter |
-| `SPACE` | Manual Enter key test |
-
-### 📊 Visual Feedback
-- Live EAR value on screen
-- Blink count on-screen and in console
-- Face: blue rectangle, Eyes: green contours
-- Console logs:  
-[BLINK DETECTED] Enter key pressed.
----
-
-## 🖥️ Application Modes
-
-### 🟢 GUI Version (`gui_app.py`)
-- Start/Stop buttons
-- Sensitivity slider
-- Activity log
-- Toggle key simulation
-
-### 🔵 Command-Line Version (`main.py`)
-- Lightweight
-- Real-time console output
-- Key shortcuts
-
-### ⚪ Standalone Version (`working_blink_detector.py`)
-- All-in-one script
-- Fastest and most stable
-- Ideal for demo
-
----
-
-## 📦 Requirements
+### Prerequisites
 
 - Python 3.11.9 (recommended)
-- Webcam (internal or USB)
-- Windows 10/11
+- Windows 10/11 (tested)
+- Webcam connected to your computer
 
-### Python Libraries
+### Setup
 
-Install everything with:
+1. **Clone or download this repository**
 
-pip install -r requirements.txt
+2. **Create a virtual environment:**
+   ```bash
+   python -m venv venv
+   ```
 
-Or individually:
-pip install opencv-python dlib imutils numpy pyautogui
+3. **Activate the virtual environment:**
+   ```bash
+   # Windows
+   .\venv\Scripts\activate
+   ```
 
-🚀 How to Run:
-1. Activate Virtual Environment
-cd path/to/project
-.\venv\Scripts\activate
+4. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3. Run Any Version
-GUI:
-python gui_app.py
+## Usage
 
-Command-line:
+### Command-Line Interface
+
+Run the main application:
+```bash
 python main.py
+```
 
-Best All-in-One:
-python working_blink_detector.py
+**Controls:**
+- `q` - Quit the application
+- `s` - Toggle Enter key simulation ON/OFF
+- `r` - Reset blink counter
 
-Or double-click:
-run_blink_detector.bat
+### GUI Interface
 
-🧪 Testing Instructions
-Open Notepad or any text editor.
+Run the GUI application:
+```bash
+python gui_app.py
+```
 
-Run the program.
+**Features:**
+- Start/Stop detection with button
+- Toggle Enter key simulation with checkbox
+- Adjust blink sensitivity with slider
+- View real-time statistics
+- Activity log with timestamps
+- Reset counter functionality
 
-Blink normally in front of the webcam.
+### Standalone Version
 
-Observe:
+For a simple standalone version:
+```bash
+python blink_detection_opencv.py
+```
 
-Blink counter increasing
+## How It Works
 
-“Enter key pressed” log in terminal
+1. **Face Detection**: Uses OpenCV's Haar cascade classifiers to detect faces
+2. **Eye Detection**: Detects eyes within detected face regions
+3. **Blink Detection**: Monitors the number of detected eyes over consecutive frames
+4. **Action Trigger**: When a blink is detected (eyes closed for specified frames), triggers keyboard action
 
-New lines in the editor when simulation is ON
+### Detection Algorithm
 
-🔐 Important Notes
-The file shape_predictor_68_face_landmarks.dat is required for facial landmark detection but is too large for GitHub.
-Download it from here:
-🔗 https://github.com/davisking/dlib-models/blob/master/shape_predictor_68_face_landmarks.dat.bz2
+- When fewer than 2 eyes are detected, the system considers it a potential blink
+- A blink is confirmed when eyes remain closed for a configurable number of consecutive frames (default: 3)
+- Upon blink confirmation, the system can simulate an Enter key press
 
-Extract it and place it in your project folder.
+## Configuration
 
-🚫 .gitignore (recommended)
-gitignore
-venv/*.dat*.pyc__pycache__/*.mp4.DS_Store
+### Adjustable Parameters
 
-📚 Use Cases
-♿ Accessibility: Help users control systems with eye blinks.
-📽️ Presentations: Advance slides without hands.
-🧪 HCI Projects: Use as a real-world input control prototype.
-🕹️ Automation: Interact with software using eye movement.
+In `eye_tracker.py`:
+- `blink_threshold`: Sensitivity threshold (not used in current OpenCV implementation)
+- `consecutive_frames`: Number of frames needed to confirm a blink (default: 3)
 
-💡 Tips
-Ensure good lighting and position webcam at eye level.
-Blink gently — system tracks both eyes.
-Adjust the frame threshold or EAR sensitivity as needed.
+In `utils.py`:
+- Camera source index (default: 0)
+- Frame width for processing (default: 600px)
+- PyAutoGUI settings (pause, failsafe)
 
-🛡️ Safety Features
-PyAutoGUI failsafe: Move your mouse to the top-left corner to immediately abort all automation.
-Toggle simulation: Press 's' or use GUI checkbox.
+## Troubleshooting
 
-🧑‍💻 Author
-This project was developed as part of a university Operating Systems course, with support from AI-based augmentation tools and research into computer vision and user input automation.
+### Camera Issues
+
+If you encounter camera problems:
+
+1. **Check camera connection** and ensure it's not being used by another application
+2. **Try different camera sources** by changing `src=0` to `src=1` in the code
+3. **Verify camera permissions** in Windows settings
+4. **Test camera** with Windows Camera app first
+
+### Performance Issues
+
+- **Reduce frame width** in `CameraManager` for faster processing
+- **Adjust consecutive frames** threshold for more/less sensitive detection
+- **Close other applications** that might be using system resources
+
+### Detection Issues
+
+- **Ensure good lighting** for better face/eye detection
+- **Position yourself** properly in front of the camera
+- **Adjust sensitivity** using the GUI slider or modifying parameters in code
+
+## Safety Features
+
+- **PyAutoGUI Failsafe**: Move mouse to top-left corner to immediately stop all automation
+- **Toggle functionality**: Easily enable/disable keyboard simulation
+- **Visual feedback**: Always shows current status and detection count
+
+## Dependencies
+
+- `opencv-python`: Computer vision and image processing
+- `imutils`: Image processing utilities
+- `numpy`: Numerical computing
+- `pyautogui`: Keyboard and mouse automation
+- `scipy`: Scientific computing (for distance calculations)
+- `pillow`: Image processing for GUI
+
+## Known Issues
+
+- **dlib compatibility**: The original dlib-based implementation has compatibility issues with some Windows systems
+- **Lighting sensitivity**: Detection accuracy depends on lighting conditions
+- **False positives**: May detect blinks when looking away or during rapid eye movements
+
+## Future Improvements
+
+- [ ] Add support for custom key mappings
+- [ ] Implement mouse click simulation
+- [ ] Add calibration mode for personalized detection
+- [ ] Support for multiple action types
+- [ ] Add data logging and analytics
+- [ ] Implement machine learning-based detection
+
+## Contributing
+
+Feel free to contribute to this project by:
+- Reporting bugs
+- Suggesting new features
+- Submitting pull requests
+- Improving documentation
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Acknowledgments
+
+- OpenCV community for computer vision tools
+- PyAutoGUI for automation capabilities
+- imutils library for image processing utilities
