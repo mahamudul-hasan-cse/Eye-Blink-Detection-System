@@ -27,7 +27,7 @@ Eye blink detection/
 └── README.md                  # This file
 ```
 
-**###Screenshot**
+### Screenshot
 <img width="795" height="635" alt="Screenshot_1" src="https://github.com/user-attachments/assets/496a9fcb-5f2e-4538-af52-b94c1bae650c" />
 
 
